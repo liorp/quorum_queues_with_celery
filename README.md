@@ -1,1 +1,1 @@
-A simple celery app that supports quorum queues
+A simple celery app that supports quorum queues.
