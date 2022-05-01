@@ -6,12 +6,14 @@ app.config_from_object('celeryconfig')
 
 
 class NoChannelGlobalQoS(bootsteps.StartStopStep):
-    requires = {'celery.worker.consumer.tasks:Tasks'}
+    requires = {'celery.worker.consumer.tasks:Tasks'}  # Required for the step to be run after Tasks has been run
 
     def start(self, c):
+        # In this context, `c` is the consumer (celery worker)
         qos_global = False
 
         # This is where we enforce per-client QoS, the rest is just copypaste from celery
+        # Note that we set to prefetching size to be 0, so the exact value of `c.initial_prefetch_count` is not important
         c.connection.default_channel.basic_qos(
             0, c.initial_prefetch_count, qos_global,
         )
